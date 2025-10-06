@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prod-ready: async, per-test rolling files, no unrouted.log -->
+<Configuration status="warn" monitorInterval="60" shutdownTimeout="10">
+
+    <!-- Centralized props -->
+    <Properties>
+        <!-- Where to store logs -->
+        <Property name="logs.dir">target/logs/suite</Property>
+
+        <!-- Layout pattern; includes the test name from ThreadContext -->
+        <!-- NOTE: %L (line number) is expensive; keep only if you need it -->
+        <Property name="log.pattern">%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L [%X{threadName}] - %m%n</Property>
+
+        <!-- Sentinel key used when ctx:threadName is missing -->
+        <Property name="drop.key">__drop__</Property>
+    </Properties>
+
+    <Appenders>
+
+        <!-- Route by test name; drop anything before the test sets ThreadContext -->
+        <Routing name="RoutingAppender">
+            <Routes pattern="$${ctx:threadName:-${drop.key}}">
+                <!-- 1) Early framework noise: drop instead of writing unrouted.log -->
+                <Route key="${drop.key}">
+                    <Null name="drop-when-missing"/>
+                </Route>
+
+                <!-- 2) Real test names -> rolling per-test files -->
+                <Route>
+                    <RollingFile name="per-test"
+                                 fileName="${logs.dir}/${ctx:threadName}.log"
+                                 filePattern="${logs.dir}/${ctx:threadName}-%d{yyyy-MM-dd}-%i.log.gz">
+                        <PatternLayout pattern="${log.pattern}"/>
+                        <Policies>
+                            <!-- roll daily and also when file hits ~10 MB -->
+                            <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                            <SizeBasedTriggeringPolicy size="10 MB"/>
+                        </Policies>
+                        <!-- Keep up to 30 rolled files per test -->
+                        <DefaultRolloverStrategy max="30" fileIndex="min"/>
+                    </RollingFile>
+                </Route>
+            </Routes>
+        </Routing>
+
+        <!-- Keep console logs readable during local runs / CI -->
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${log.pattern}"/>
+        </Console>
+
+    </Appenders>
+
+    <!-- Use AsyncRoot: requires LMAX Disruptor on the classpath -->
+    <!-- includeLocation=true is needed if you use %L in the pattern -->
+    <Loggers>
+        <AsyncRoot level="info" includeLocation="true">
+            <AppenderRef ref="console"/>
+            <AppenderRef ref="RoutingAppender"/>
+        </AsyncRoot>
+    </Loggers>
+
+</Configuration>
