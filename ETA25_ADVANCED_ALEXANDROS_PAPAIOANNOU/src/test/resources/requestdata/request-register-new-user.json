@@ -1,0 +1,15 @@
+{
+  "first_name": "ApiTestFirstName",
+  "last_name": "ApiTestLastName",
+  "address": {
+    "street": "New Sunset Line 921",
+    "city": "Citysburgh",
+    "state": "Statesville",
+    "country": "Wonderland",
+    "postal_code": "WSCNSL921"
+  },
+  "phone": "0987654321",
+  "dob": "1970-01-01",
+  "password": "SuperSecure@123",
+  "email": "${email}"
+}
