@@ -11,7 +11,7 @@ import ui.support.utils.extent.ReportStep;
 import java.util.Arrays;
 import java.util.List;
 
-public class CheckProductsTest extends Hooks {
+public class CheckProductsTest extends BaseTest {
 
     @Test
     public void checkProducts() {

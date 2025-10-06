@@ -97,11 +97,16 @@
                         <configuration>
                             <suiteXmlFiles>
                                 <!--suppress UnresolvedMavenProperty -->
-                                <suiteXmlFile>${suiteXmlFile}.xml</suiteXmlFile>
-                                <argLine>
-                                    -Dlog4j2.isThreadContextMapInheritable=true
-                                    -Dlog4j2.asyncLoggerConfigRingBufferSize=262144
-                                </argLine>
+                                <suiteXmlFile>
+                                    ${suiteXmlFile}.xml
+                                    <argLine>
+                                        -Dlog4j2.isThreadContextMapInheritable=true
+                                        -Dlog4j2.asyncLoggerConfigRingBufferSize=262144
+                                    </argLine>
+                                </suiteXmlFile>
+                                <suiteXmlFile>
+                                    src/test/resources/testng.xml
+                                </suiteXmlFile>
                             </suiteXmlFiles>
                         </configuration>
                     </plugin>

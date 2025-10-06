@@ -9,6 +9,9 @@ import api.responses.ResponseRegisterNewAccount;
 import api.support.BaseTest;
 import api.support.DataGenerator;
 import api.support.JsonReader;
+import ui.support.utils.LoggerUtility;
+import ui.support.utils.extent.ExtentUtility;
+import ui.support.utils.extent.ReportStep;
 
 import java.util.Map;
 
@@ -21,11 +24,17 @@ public class TestRegisterNewAccount extends BaseTest {
 //regula de email aplicata per request
 //tokenize firstname, lastname in json request
         System.out.println("REQUEST JSON:\n" + JsonReader.toString(requestRegisterNewAccount, true) + "\n");
+        LoggerUtility.infoLog("POST request for new account creation was sent.");
+        ExtentUtility.attachLog(ReportStep.PASS_STEP,"POST request for new account creation was sent.");
+
 
         Response response = post("users.register", requestRegisterNewAccount);
 
         System.out.println("Protocol and response: " + response.getStatusLine());
         System.out.println("Status code: " + response.getStatusCode() + "\n");
+        LoggerUtility.infoLog("POST response for new account creation was received.");
+        ExtentUtility.attachLog(ReportStep.PASS_STEP,"POST response for new account creation was received.");
+
 
         try {
             RequestRegisterNewAccount echoed = response.as(RequestRegisterNewAccount.class);
