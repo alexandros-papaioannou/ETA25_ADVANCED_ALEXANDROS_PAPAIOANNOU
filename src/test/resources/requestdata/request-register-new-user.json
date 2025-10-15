@@ -1,6 +1,6 @@
 {
-  "first_name": "ApiTestFirstName",
-  "last_name": "ApiTestLastName",
+  "first_name": "${first_name}",
+  "last_name": "${last_name}",
   "address": {
     "street": "New Sunset Line 921",
     "city": "Citysburgh",
