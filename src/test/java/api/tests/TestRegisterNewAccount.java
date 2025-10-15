@@ -20,7 +20,12 @@ public class TestRegisterNewAccount extends BaseTest {
     @Test
     public void registerNewAccount() {
         RequestRegisterNewAccount requestRegisterNewAccount = JsonReader.fromResource("requestdata/request-register-new-user.json",
-                Map.of("email", DataGenerator.randomEmail("apitest")), RequestRegisterNewAccount.class);
+                Map.of(
+                        "email", DataGenerator.randomEmail("api"),
+                        "first_name", DataGenerator.randomFirstName(),
+                        "last_name", DataGenerator.randomLastName()
+                ),
+                RequestRegisterNewAccount.class);
 //regula de email aplicata per request
 //tokenize firstname, lastname in json request
         System.out.println("REQUEST JSON:\n" + JsonReader.toString(requestRegisterNewAccount, true) + "\n");
@@ -47,18 +52,34 @@ public class TestRegisterNewAccount extends BaseTest {
         ResponseRegisterNewAccount responseBody = response.as(ResponseRegisterNewAccount.class);
 
         Assert.assertEquals(response.getStatusCode(),201);
+        LoggerUtility.infoLog("Expected response code 201 received.");
+        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Expected response code 201 received.");
         Assert.assertEquals(requestRegisterNewAccount.getFirstName(),
                 responseBody.getFirstName());
+        LoggerUtility.infoLog("First name from request matches first name from response.");
+        ExtentUtility.attachLog(ReportStep.PASS_STEP,"First name from request matches first name from response.");
         Assert.assertEquals(requestRegisterNewAccount.getLastName(),
                 responseBody.getLastName());
+        LoggerUtility.infoLog("Last name from request matches last name from response.");
+        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Last name from request matches last name from response.");
         Assert.assertEquals(requestRegisterNewAccount.getPhone(),
                 responseBody.getPhone());
+        LoggerUtility.infoLog("Phone number from request matches phone number from response.");
+        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Phone number from request matches phone number from response.");
         Assert.assertEquals(requestRegisterNewAccount.getDob(),
                 responseBody.getDob());
+        LoggerUtility.infoLog("Date of birth from request matches date of birth from response.");
+        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Date of birth from request matches date of birth from response.");
         Assert.assertEquals(requestRegisterNewAccount.getEmail(),
                 responseBody.getEmail());
+        LoggerUtility.infoLog("Email from request matches email from response.");
+        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Email from request matches email from response.");
         Assert.assertNotNull(responseBody.getId());
+        LoggerUtility.infoLog("Response contains an id.");
+        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Response contains an id.");
         Assert.assertNotNull(responseBody.getCreatedAt());
+        LoggerUtility.infoLog("Response contains a creation date and time.");
+        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Response contains a creation date and time.");
         Assert.assertEquals(requestRegisterNewAccount.getAddress().getStreet(),
                 responseBody.getAddress().getStreet());
         Assert.assertEquals(requestRegisterNewAccount.getAddress().getCity(),
@@ -69,10 +90,8 @@ public class TestRegisterNewAccount extends BaseTest {
                 responseBody.getAddress().getCountry());
         Assert.assertEquals(requestRegisterNewAccount.getAddress().getPostalCode(),
                 responseBody.getAddress().getPostalCode());
-
-        System.out.println(responseBody.getId());
-        System.out.println(responseBody.getEmail());
-
+        LoggerUtility.infoLog("Response contains a full address and matches with the request.");
+        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Response contains a full address and matches with the request.");
     }
 }
 
