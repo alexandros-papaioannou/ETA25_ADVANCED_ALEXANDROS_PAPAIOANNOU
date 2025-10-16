@@ -28,96 +28,90 @@ public class TestRegisterNewAccountWithSameMail extends BaseTest {
                 ),
                 RequestRegisterNewAccount.class);
 
-        Response response = post("users.register", requestRegisterNewAccount);
-        System.out.println("REQUEST JSON:\n" + JsonReader.toString(requestRegisterNewAccount, true) + "\n");
-        LoggerUtility.infoLog("POST request for new account creation was sent.");
+        System.out.println("REGISTER NEW ACCOUNT REQUEST JSON:\n" + JsonReader.toString(requestRegisterNewAccount, true) + "\n");
+        LoggerUtility.infoLog("POST request for new account creation was sent." + "\n");
         ExtentUtility.attachLog(ReportStep.PASS_STEP,"POST request for new account creation was sent.");
 
+        Response responseRegisterNewAccount = post("users.register", requestRegisterNewAccount);
 
-        //Response response = post("users.register", requestRegisterNewAccount);
-
-
-        LoggerUtility.infoLog("POST response for new account creation was received.");
+        System.out.println("Protocol and response: " + responseRegisterNewAccount.getStatusLine());
+        System.out.println("Status code: " + responseRegisterNewAccount.getStatusCode() + "\n");
+        LoggerUtility.infoLog("POST response for new account creation was received." + "\n");
         ExtentUtility.attachLog(ReportStep.PASS_STEP,"POST response for new account creation was received.");
-        System.out.println("Protocol and response: " + response.getStatusLine());
-        System.out.println("Status code: " + response.getStatusCode() + "\n");
-
 
         try {
-            RequestRegisterNewAccount echoed = response.as(RequestRegisterNewAccount.class);
+            RequestRegisterNewAccount echoed = responseRegisterNewAccount.as(RequestRegisterNewAccount.class);
             System.out.println("RESPONSE mapped to Account:\n" + JsonReader.toString(echoed, true));
         } catch (Exception ex) {
-            JsonNode node = response.as(JsonNode.class);
-            System.out.println("RESPONSE JSON:\n" + node.toPrettyString());
+            JsonNode node = responseRegisterNewAccount.as(JsonNode.class);
+            System.out.println("REGISTER NEW ACCOUNT RESPONSE JSON:\n" + node.toPrettyString() + "\n");
         }
 
-        ResponseRegisterNewAccount responseBody = response.as(ResponseRegisterNewAccount.class);
+        ResponseRegisterNewAccount responseBodyRegisterNewAccount = responseRegisterNewAccount.as(ResponseRegisterNewAccount.class);
 
-        Assert.assertEquals(response.getStatusCode(),201);
+        Assert.assertEquals(responseRegisterNewAccount.getStatusCode(),201);
         LoggerUtility.infoLog("Expected response code 201 received.");
         ExtentUtility.attachLog(ReportStep.PASS_STEP,"Expected response code 201 received.");
         Assert.assertEquals(requestRegisterNewAccount.getFirstName(),
-                responseBody.getFirstName());
+                responseBodyRegisterNewAccount.getFirstName());
         LoggerUtility.infoLog("First name from request matches first name from response.");
         ExtentUtility.attachLog(ReportStep.PASS_STEP,"First name from request matches first name from response.");
         Assert.assertEquals(requestRegisterNewAccount.getLastName(),
-                responseBody.getLastName());
+                responseBodyRegisterNewAccount.getLastName());
         LoggerUtility.infoLog("Last name from request matches last name from response.");
         ExtentUtility.attachLog(ReportStep.PASS_STEP,"Last name from request matches last name from response.");
         Assert.assertEquals(requestRegisterNewAccount.getPhone(),
-                responseBody.getPhone());
+                responseBodyRegisterNewAccount.getPhone());
         LoggerUtility.infoLog("Phone number from request matches phone number from response.");
         ExtentUtility.attachLog(ReportStep.PASS_STEP,"Phone number from request matches phone number from response.");
         Assert.assertEquals(requestRegisterNewAccount.getDob(),
-                responseBody.getDob());
+                responseBodyRegisterNewAccount.getDob());
         LoggerUtility.infoLog("Date of birth from request matches date of birth from response.");
         ExtentUtility.attachLog(ReportStep.PASS_STEP,"Date of birth from request matches date of birth from response.");
         Assert.assertEquals(requestRegisterNewAccount.getEmail(),
-                responseBody.getEmail());
+                responseBodyRegisterNewAccount.getEmail());
         LoggerUtility.infoLog("Email from request matches email from response.");
         ExtentUtility.attachLog(ReportStep.PASS_STEP,"Email from request matches email from response.");
-        Assert.assertNotNull(responseBody.getId());
+        Assert.assertNotNull(responseBodyRegisterNewAccount.getId());
         LoggerUtility.infoLog("Response contains an id.");
         ExtentUtility.attachLog(ReportStep.PASS_STEP,"Response contains an id.");
-        Assert.assertNotNull(responseBody.getCreatedAt());
+        Assert.assertNotNull(responseBodyRegisterNewAccount.getCreatedAt());
         LoggerUtility.infoLog("Response contains a creation date and time.");
         ExtentUtility.attachLog(ReportStep.PASS_STEP,"Response contains a creation date and time.");
         Assert.assertEquals(requestRegisterNewAccount.getAddress().getStreet(),
-                responseBody.getAddress().getStreet());
+                responseBodyRegisterNewAccount.getAddress().getStreet());
         Assert.assertEquals(requestRegisterNewAccount.getAddress().getCity(),
-                responseBody.getAddress().getCity());
+                responseBodyRegisterNewAccount.getAddress().getCity());
         Assert.assertEquals(requestRegisterNewAccount.getAddress().getState(),
-                responseBody.getAddress().getState());
+                responseBodyRegisterNewAccount.getAddress().getState());
         Assert.assertEquals(requestRegisterNewAccount.getAddress().getCountry(),
-                responseBody.getAddress().getCountry());
+                responseBodyRegisterNewAccount.getAddress().getCountry());
         Assert.assertEquals(requestRegisterNewAccount.getAddress().getPostalCode(),
-                responseBody.getAddress().getPostalCode());
+                responseBodyRegisterNewAccount.getAddress().getPostalCode());
         LoggerUtility.infoLog("Response contains a full address and matches with the request.");
         ExtentUtility.attachLog(ReportStep.PASS_STEP,"Response contains a full address and matches with the request.");
 
-        Response responseOnDuplicateMail = post("users.register", requestRegisterNewAccount);
-        System.out.println("REQUEST JSON:\n" + JsonReader.toString(requestRegisterNewAccount, true) + "\n");
-        LoggerUtility.infoLog("POST request for new account creation with the same email was sent.");
+        System.out.println("REGISTER NEW ACCOUNT WITH THE SAME EMAIL REQUEST JSON:\n" + JsonReader.toString(requestRegisterNewAccount, true) + "\n");
+        LoggerUtility.infoLog("POST request for new account creation with the same email was sent." + "\n");
         ExtentUtility.attachLog(ReportStep.PASS_STEP,"POST request for new account creation with the same email was sent.");
 
+        Response responseRegisterNewAccountSameMail = post("users.register", requestRegisterNewAccount);
 
-
+        System.out.println("Protocol and response: " + responseRegisterNewAccountSameMail.getStatusLine());
+        System.out.println("Status code: " + responseRegisterNewAccountSameMail.getStatusCode() + "\n");
         LoggerUtility.infoLog("POST response for new account creation with the same email was received.");
         ExtentUtility.attachLog(ReportStep.PASS_STEP,"POST response for new account creation with the same email was received.");
 
-        System.out.println("Protocol and response: " + responseOnDuplicateMail.getStatusLine());
-        System.out.println("Status code: " + responseOnDuplicateMail.getStatusCode() + "\n");
-
         try {
-            RequestRegisterNewAccount echoed = responseOnDuplicateMail.as(RequestRegisterNewAccount.class);
+            RequestRegisterNewAccount echoed = responseRegisterNewAccountSameMail.as(RequestRegisterNewAccount.class);
             System.out.println("RESPONSE mapped to Account:\n" + JsonReader.toString(echoed, true));
         } catch (Exception ex) {
-            JsonNode node = responseOnDuplicateMail.as(JsonNode.class);
-            System.out.println("RESPONSE JSON:\n" + node.toPrettyString());
+            JsonNode node = responseRegisterNewAccountSameMail.as(JsonNode.class);
+            System.out.println("REGISTER NEW ACCOUNT WITH THE SAME EMAIL RESPONSE JSON:\n" + node.toPrettyString() + "\n");
         }
 
-        ResponseRegisterNewAccountWithSameMail responseBodyRegisterNewAccountWithSameMail = responseOnDuplicateMail.as(ResponseRegisterNewAccountWithSameMail.class);
-        Assert.assertEquals(responseOnDuplicateMail.getStatusCode(),422);
+        ResponseRegisterNewAccountWithSameMail responseBodyRegisterNewAccountWithSameMail = responseRegisterNewAccountSameMail.as(ResponseRegisterNewAccountWithSameMail.class);
+        Assert.assertEquals(responseRegisterNewAccountSameMail.getStatusCode(),422);
         LoggerUtility.infoLog("Expected response code 422 received.");
         ExtentUtility.attachLog(ReportStep.PASS_STEP,"Expected response code 422 received.");
         Assert.assertNotNull(responseBodyRegisterNewAccountWithSameMail.getResponseDuplicateMailMessage());
@@ -126,8 +120,6 @@ public class TestRegisterNewAccountWithSameMail extends BaseTest {
         Assert.assertEquals(responseBodyRegisterNewAccountWithSameMail.getResponseDuplicateMailMessage().getFirst(),"A customer with this email address already exists.");
         LoggerUtility.infoLog("Response for account creation with the same email matches the expected one.");
         ExtentUtility.attachLog(ReportStep.PASS_STEP,"Response for account creation with the same email matches the expected one.");
-
-
     }
 }
 
