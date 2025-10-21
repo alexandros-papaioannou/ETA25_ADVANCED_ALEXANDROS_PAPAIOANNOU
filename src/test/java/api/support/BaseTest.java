@@ -70,4 +70,8 @@ public abstract class BaseTest {
     protected Response get(String endpointKey) {
         return client.get(endpoint(endpointKey), null, null, null);
     }
+
+    protected Response get(String endpointKey, Map<String, String> headers) {
+        return client.get(endpoint(endpointKey), null, null, headers);
+    }
 }
