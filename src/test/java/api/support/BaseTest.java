@@ -74,4 +74,13 @@ public abstract class BaseTest {
     protected Response get(String endpointKey, Map<String, String> headers) {
         return client.get(endpoint(endpointKey), null, null, headers);
     }
+
+//    protected Response delete(String endpointKey, Map<String, String> headers) {
+//        return client.delete(endpoint(endpointKey), null, null, headers);
+//    }
+
+    protected Response delete(String endpointKey, Map<String, String> headers, Map<String, String> pathParams) {
+        String url = endpoint(endpointKey, pathParams);
+        return client.delete(url, null, null, headers);
+    }
 }
