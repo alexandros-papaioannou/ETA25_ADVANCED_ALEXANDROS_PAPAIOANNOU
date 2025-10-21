@@ -53,6 +53,23 @@ public class RequestClient {
         return req.when().get(path); //triggers the GET req and returns the GET response after the above setup
     }
 
+    public Response delete(String path,
+                        Map<String, ?> pathParams,
+                        Map<String, ?> queryParams,
+                        Map<String, String> headers) {
+        var req = given().spec(baseSpec); //starts RestAssured request
+        if (pathParams != null) { //replaces parameters if provided
+            req.pathParams(pathParams);
+        }
+        if (queryParams != null) { //replaces parameters if provided
+            req.queryParams(queryParams);
+        }
+        if (headers != null) { //replaces parameters if provided
+            req.headers(headers);
+        }
+        return req.when().delete(path); //triggers the GET req and returns the GET response after the above setup
+    }
+
     public Response postFromResource(String path, String resourcePath) {
         //String json = readResourceAsString(resourcePath);
         String json = JsonReader.readResourceAsString(resourcePath);
