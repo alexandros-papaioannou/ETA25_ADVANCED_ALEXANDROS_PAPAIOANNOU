@@ -5,7 +5,6 @@ import io.restassured.response.Response;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
-import ui.support.utils.LoggerUtility;
 
 import java.util.Map;
 

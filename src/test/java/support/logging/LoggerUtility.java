@@ -1,4 +1,4 @@
-package ui.support.utils;
+package support.logging;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,17 +27,15 @@ public class LoggerUtility {
     }
 
     public static synchronized void infoLog(String message) {
-        logger.info(Thread.currentThread().getName() + ":" + getExecutionInfo() + message);
+        logger.info(formatMessage(message));
     }
 
     public static synchronized void errorLog(String message) {
-        logger.error(Thread.currentThread().getName() + ":" + getExecutionInfo() + message);
+        logger.error(formatMessage(message));
     }
 
-    private static synchronized String getExecutionInfo() {
-        String className = Thread.currentThread().getStackTrace()[2].getClassName();
-        String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
-        return className + ":" + methodName + " ====> ";
+    private static String formatMessage(String message) {
+        return " ====> " + message;
     }
 
     public static void mergeLogs() {

@@ -3,8 +3,7 @@ package ui.tests;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import ui.pom.HomePage;
-import ui.support.utils.Hooks;
-import ui.support.utils.LoggerUtility;
+import support.logging.LoggerUtility;
 import ui.support.utils.extent.ExtentUtility;
 import ui.support.utils.extent.ReportStep;
 

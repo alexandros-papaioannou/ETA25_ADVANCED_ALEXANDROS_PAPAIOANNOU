@@ -9,7 +9,7 @@
 
         <!-- Layout pattern; includes the test name from ThreadContext -->
         <!-- NOTE: %L (line number) is expensive; keep only if you need it -->
-        <Property name="log.pattern">%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L [%X{threadName}] - %m%n</Property>
+        <Property name="log.pattern">%d{yyyy-MM-dd HH:mm:ss} %-5p [%X{threadName}] - %m%n</Property>
 
         <!-- Sentinel key used when ctx:threadName is missing -->
         <Property name="drop.key">__drop__</Property>

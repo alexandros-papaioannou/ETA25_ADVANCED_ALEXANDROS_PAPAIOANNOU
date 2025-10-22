@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import ui.support.utils.LoggerUtility;
+import support.logging.LoggerUtility;
 import ui.support.utils.extent.ExtentUtility;
 import ui.support.utils.extent.ReportStep;
 

@@ -9,7 +9,7 @@ import api.responses.ResponseRegisterNewAccount;
 import api.support.BaseTest;
 import api.support.DataGenerator;
 import api.support.JsonReader;
-import ui.support.utils.LoggerUtility;
+import support.logging.LoggerUtility;
 import ui.support.utils.extent.ExtentUtility;
 import ui.support.utils.extent.ReportStep;
 

@@ -5,7 +5,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import ui.support.browser.BrowserFactory;
 import ui.support.browser.WebDriverManager;
-import ui.support.utils.LoggerUtility;
+import support.logging.LoggerUtility;
 
 public class BaseTest {
 
