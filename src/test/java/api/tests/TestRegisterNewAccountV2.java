@@ -8,9 +8,9 @@ public class TestRegisterNewAccountV2 extends BaseTest {
 
     @Test
     public void registerNewAccountV2() {
-        new UserActions(this)
-                .registerNewAccount()
-                .receiveResponse()
-                .validateResponse();
+        UserActions actions = new UserActions(this);
+        actions.registerNewAccount();
+        actions.receiveResponse();
+        actions.validateResponse();
     }
 }

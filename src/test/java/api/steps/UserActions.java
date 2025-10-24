@@ -25,7 +25,7 @@ public class UserActions {
         this.ctx = ctx;
     }
 
-    public UserActions registerNewAccount() {
+    public void registerNewAccount() {
         request = JsonReader.fromResource("requestdata/request-register-new-user.json",
                 Map.of(
                         "email", DataGenerator.randomEmail("api"),
@@ -34,10 +34,9 @@ public class UserActions {
                 ),
                 RequestRegisterNewAccount.class);
         TestLog.info("REGISTER NEW USER REQUEST JSON:\n" + JsonReader.toString(request, true));
-        return this;
     }
 
-    public UserActions receiveResponse() {
+    public void receiveResponse() {
         TestLog.info("POST request for new account creation was sent.");
         rawResponse = ctx.post("users.register", request);
         TestLog.info("Protocol and response: " + rawResponse.getStatusLine());
@@ -61,7 +60,6 @@ public class UserActions {
             }
             Assert.fail("Deserialization to ResponseRegisterNewAccount failed", ex);
         }
-        return this;
     }
 
     public void validateResponse() {
