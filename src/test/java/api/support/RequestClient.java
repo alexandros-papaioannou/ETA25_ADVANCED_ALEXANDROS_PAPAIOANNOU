@@ -71,13 +71,11 @@ public class RequestClient {
     }
 
     public Response postFromResource(String path, String resourcePath) {
-        //String json = readResourceAsString(resourcePath);
         String json = JsonReader.readResourceAsString(resourcePath);
         return sendWithBody(Method.POST, path, json);
     }
 
     public Response putFromResource(String path, String resourcePath) {
-        //String json = readResourceAsString(resourcePath);
         String json = JsonReader.readResourceAsString(resourcePath);
         return sendWithBody(Method.PUT, path, json);
     }

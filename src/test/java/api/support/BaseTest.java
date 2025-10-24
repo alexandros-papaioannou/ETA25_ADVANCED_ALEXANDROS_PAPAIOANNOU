@@ -49,28 +49,28 @@ public abstract class BaseTest {
 
     //metode pentru POST, PUT, GET
     //apeleaza metodele de mai sus pentru a lua endpoint-ul si json-ul
-    protected Response post(String endpointKey, String jsonKey, Map<String, ?> vars) {
+    public Response post(String endpointKey, String jsonKey, Map<String, ?> vars) {
         String path = endpoint(endpointKey);
         String payload = body(jsonKey, vars);
         return client.sendWithBody(Method.POST, path, payload);
     }
 
-    protected Response post(String endpointKey, Object body) {
+    public Response post(String endpointKey, Object body) {
         String path = endpoint(endpointKey);
         return client.sendWithBody(Method.POST, path, body);
     }
 
-    protected Response put(String endpointKey, String jsonKey, Map<String, ?> vars) {
+    public Response put(String endpointKey, String jsonKey, Map<String, ?> vars) {
         String path = endpoint(endpointKey);
         String payload = body(jsonKey, vars);
         return client.sendWithBody(Method.PUT, path, payload);
     }
 
-    protected Response get(String endpointKey) {
+    public Response get(String endpointKey) {
         return client.get(endpoint(endpointKey), null, null, null);
     }
 
-    protected Response get(String endpointKey, Map<String, String> headers) {
+    public Response get(String endpointKey, Map<String, String> headers) {
         return client.get(endpoint(endpointKey), null, null, headers);
     }
 
@@ -78,7 +78,7 @@ public abstract class BaseTest {
 //        return client.delete(endpoint(endpointKey), null, null, headers);
 //    }
 
-    protected Response delete(String endpointKey, Map<String, String> headers, Map<String, String> pathParams) {
+    public Response delete(String endpointKey, Map<String, String> headers, Map<String, String> pathParams) {
         String url = endpoint(endpointKey, pathParams);
         return client.delete(url, null, null, headers);
     }

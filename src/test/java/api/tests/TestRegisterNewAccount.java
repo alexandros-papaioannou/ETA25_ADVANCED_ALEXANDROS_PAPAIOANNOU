@@ -1,6 +1,6 @@
 package api.tests;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -9,9 +9,8 @@ import api.responses.ResponseRegisterNewAccount;
 import api.support.BaseTest;
 import api.support.DataGenerator;
 import api.support.JsonReader;
-import support.logging.LoggerUtility;
-import ui.support.utils.extent.ExtentUtility;
-import ui.support.utils.extent.ReportStep;
+import support.assertions.ApiAssertions;
+import support.logging.TestLog;
 
 import java.util.Map;
 
@@ -26,72 +25,44 @@ public class TestRegisterNewAccount extends BaseTest {
                         "last_name", DataGenerator.randomLastName()
                 ),
                 RequestRegisterNewAccount.class);
-//regula de email aplicata per request
-//tokenize firstname, lastname in json request
-        System.out.println("REGISTER NEW USER REQUEST JSON:\n" + JsonReader.toString(requestRegisterNewAccount, true) + "\n");
-        LoggerUtility.infoLog("POST request for new account creation was sent." + "\n");
-        ExtentUtility.attachLog(ReportStep.PASS_STEP,"POST request for new account creation was sent.");
 
+        TestLog.info("REGISTER NEW USER REQUEST JSON:\n" + JsonReader.toString(requestRegisterNewAccount, true));
+        TestLog.info("POST request for new account creation was sent.");
 
         Response responseRegisterNewAccount = post("users.register", requestRegisterNewAccount);
 
-        System.out.println("Protocol and response: " + responseRegisterNewAccount.getStatusLine());
-        System.out.println("Status code: " + responseRegisterNewAccount.getStatusCode() + "\n");
-        LoggerUtility.infoLog("POST response for new account creation was received." + "\n");
-        ExtentUtility.attachLog(ReportStep.PASS_STEP,"POST response for new account creation was received.");
+        TestLog.info("Protocol and response: " + responseRegisterNewAccount.getStatusLine());
+        TestLog.info("Status code: " + responseRegisterNewAccount.getStatusCode());
+        TestLog.info("POST response for new account creation was received.");
 
-
+        ResponseRegisterNewAccount responseBodyRegisterNewAccount;
         try {
-            RequestRegisterNewAccount echoed = responseRegisterNewAccount.as(RequestRegisterNewAccount.class);
-            System.out.println("RESPONSE mapped to Account:\n" + JsonReader.toString(echoed, true));
+            responseBodyRegisterNewAccount = responseRegisterNewAccount.as(ResponseRegisterNewAccount.class);
+            // Optional: pretty print the mapped body for diagnostics
+            TestLog.info("REGISTER NEW USER RESPONSE (mapped):\n" + JsonReader.toString(responseBodyRegisterNewAccount, true));
         } catch (Exception ex) {
-            JsonNode node = responseRegisterNewAccount.as(JsonNode.class);
-            System.out.println("REGISTER NEW USER RESPONSE JSON:\n" + node.toPrettyString() + "\n");
+            // Log a readable JSON snapshot, then fail fast
+            final String raw = responseRegisterNewAccount.asString();
+            try {
+                // pretty-print if JSON
+                ObjectMapper om = new ObjectMapper();
+                String pretty = om.readTree(raw).toPrettyString();
+                TestLog.error("Failed to deserialize to ResponseRegisterNewAccount: " + ex.getMessage()
+                        + "\nRaw response (pretty):\n" + pretty);
+            } catch (Exception ignore) {
+                // not valid JSON or pretty-print failed, log raw
+                TestLog.error("Failed to deserialize to ResponseRegisterNewAccount: " + ex.getMessage()
+                        + "\nRaw response:\n" + raw);
+            }
+            Assert.fail("Deserialization to ResponseRegisterNewAccount failed", ex);
+            return; // keeps compiler happy; test already failed
         }
 
-        ResponseRegisterNewAccount responseBodyRegisterNewAccount = responseRegisterNewAccount.as(ResponseRegisterNewAccount.class);
+        Assert.assertEquals(responseRegisterNewAccount.getStatusCode(), 201, "Expected response code 201 received.");
+        TestLog.pass("Expected response code 201 received.");
 
-        Assert.assertEquals(responseRegisterNewAccount.getStatusCode(),201);
-        LoggerUtility.infoLog("Expected response code 201 received.");
-        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Expected response code 201 received.");
-        Assert.assertEquals(requestRegisterNewAccount.getFirstName(),
-                responseBodyRegisterNewAccount.getFirstName());
-        LoggerUtility.infoLog("First name from request matches first name from response.");
-        ExtentUtility.attachLog(ReportStep.PASS_STEP,"First name from request matches first name from response.");
-        Assert.assertEquals(requestRegisterNewAccount.getLastName(),
-                responseBodyRegisterNewAccount.getLastName());
-        LoggerUtility.infoLog("Last name from request matches last name from response.");
-        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Last name from request matches last name from response.");
-        Assert.assertEquals(requestRegisterNewAccount.getPhone(),
-                responseBodyRegisterNewAccount.getPhone());
-        LoggerUtility.infoLog("Phone number from request matches phone number from response.");
-        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Phone number from request matches phone number from response.");
-        Assert.assertEquals(requestRegisterNewAccount.getDob(),
-                responseBodyRegisterNewAccount.getDob());
-        LoggerUtility.infoLog("Date of birth from request matches date of birth from response.");
-        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Date of birth from request matches date of birth from response.");
-        Assert.assertEquals(requestRegisterNewAccount.getEmail(),
-                responseBodyRegisterNewAccount.getEmail());
-        LoggerUtility.infoLog("Email from request matches email from response.");
-        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Email from request matches email from response.");
-        Assert.assertNotNull(responseBodyRegisterNewAccount.getId());
-        LoggerUtility.infoLog("Response contains an id.");
-        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Response contains an id.");
-        Assert.assertNotNull(responseBodyRegisterNewAccount.getCreatedAt());
-        LoggerUtility.infoLog("Response contains a creation date and time.");
-        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Response contains a creation date and time.");
-        Assert.assertEquals(requestRegisterNewAccount.getAddress().getStreet(),
-                responseBodyRegisterNewAccount.getAddress().getStreet());
-        Assert.assertEquals(requestRegisterNewAccount.getAddress().getCity(),
-                responseBodyRegisterNewAccount.getAddress().getCity());
-        Assert.assertEquals(requestRegisterNewAccount.getAddress().getState(),
-                responseBodyRegisterNewAccount.getAddress().getState());
-        Assert.assertEquals(requestRegisterNewAccount.getAddress().getCountry(),
-                responseBodyRegisterNewAccount.getAddress().getCountry());
-        Assert.assertEquals(requestRegisterNewAccount.getAddress().getPostalCode(),
-                responseBodyRegisterNewAccount.getAddress().getPostalCode());
-        LoggerUtility.infoLog("Response contains a full address and matches with the request.");
-        ExtentUtility.attachLog(ReportStep.PASS_STEP,"Response contains a full address and matches with the request.");
+        ApiAssertions.assertUserMatches(requestRegisterNewAccount, responseBodyRegisterNewAccount);
+        TestLog.pass("Response body matches the request.");
     }
 }
 
